@@ -2,6 +2,7 @@ import asyncio
 import os
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters import CommandStart
+from aiogram.fsm.strategy import FSMStrategy
 
 from dotenv import find_dotenv, load_dotenv
 load_dotenv(find_dotenv())
@@ -13,7 +14,7 @@ from common.bot_commands import menu_items
 ALLOWED_UPDATES=['message, edited_message']
 
 bot = Bot(token=os.getenv('TOKEN'))
-dp = Dispatcher()
+dp = Dispatcher(fsm_strategy = FSMStrategy.USER_IN_CHAT)
 dp.include_routers(user_handlers_router, admin_handlers_router)
 
 async def main():

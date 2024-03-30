@@ -1,2 +1,8 @@
 .env
 .vscode/launch.json
+common/__pycache__/*
+filters/__pycache__/*
+handlers/__pycache__/*
+keyboards/__pycache__/*
+workload_handlers/__pycache__/*
+__pycache__/*
