@@ -1,12 +1,12 @@
 import os
 import subprocess
 
-async def compressPDF(input_filename, input_path, output_path) -> int:
-    input_item = os.path.join(input_path, input_filename)
-    output_item = os.path.join(output_path, input_filename + '_compressed')
+async def compressPDF(input_item, output_path) -> int:
+    input_filename = os.path.basename(input_item)
+    output_item = os.path.join(output_path, input_filename)
     
     sts = subprocess.call(['gs', '-sDEVICE=pdfwrite', '-dCompatibilityLevel=1.4',
-                    '-dPDFSETTINGS=/screen', '-dNOPAUSE', '-dQUIET', '-dBATCH',
+                    '-dPDFSETTINGS=/ebook', '-dNOPAUSE', '-dQUIET', '-dBATCH',
                     '-sOutputFile=' + output_item, input_item])
     
     return sts

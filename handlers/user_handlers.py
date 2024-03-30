@@ -1,13 +1,21 @@
 import asyncio
+import os
 from aiogram import F, types, Router, methods
 from aiogram.filters import CommandStart, Command, StateFilter
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.context import FSMContext
+from pydantic import ValidationError
 
 from filters.chat_types import ChatTypeFilter
 from keyboards.inline_keyboard import build_inline_callback_keyboard
 from workload_handlers.pdf_compressor import compressPDF
 from workload_handlers.file_downloader import fileDownloader
+
+from dotenv import find_dotenv, load_dotenv
+load_dotenv(find_dotenv())
+
+file_input_location = os.getenv('FILE_INPUT_LOCATION')
+file_output_location = os.getenv('FILE_OUTPUT_LOCATION')
 
 user_handlers_router = Router()
 user_handlers_router.message.filter(ChatTypeFilter(['private']))
@@ -95,17 +103,33 @@ async def topdf_Input(message: types.Message, state: FSMContext):
 async def compresspdf_Input(message: types.Message, state: FSMContext):
             
     await state.update_data(input=message.document)
-    await message.answer("Please wait")
-    file_name_telegram = message.document.file_name
-    file_path_local = await fileDownloader(message)
     
-    exit_code = await compressPDF(file_name_telegram, "/var/lib/telegram-bot/input", "/var/lib/telegram-bot/output")
-    print(exit_code)
-    print(file_path_local)
-    
-    await message.reply_document(types.FSInputFile(file_path_local))
-    await message.answer("Here is your PDF", reply_markup=INITIAL_KEYBOARD)
+    original_file_name = message.document.file_name
 
+    await message.answer("Please wait")
+    
+    if (message.document.file_size / (1024 * 1024) >= 20):
+        current_state = await state.get_state()
+        await state.clear()
+        await message.answer("Your file exceeds 20 MB \n Please try a smaller file", reply_markup=INITIAL_KEYBOARD)
+        return
+    
+    file_path_input = await fileDownloader(message)
+    file_path_output = os.path.join(file_output_location, os.path.basename(file_path_input))
+    
+    compressor_exit_code = await compressPDF(file_path_input, file_output_location)
+    if compressor_exit_code != 0:
+        current_state = await state.get_state()
+        await state.clear()
+        await message.answer("Something went wrong \n Please try again", reply_markup=INITIAL_KEYBOARD)
+        return
+    
+    await message.reply_document(types.FSInputFile(file_path_output, 'compressed_' + original_file_name))
+    await message.answer("Here is your PDF", reply_markup=INITIAL_KEYBOARD)
+    
+    if os.path.isfile(file_path_output):
+        os.remove(file_path_output)
+    
     await state.clear()
 
 
