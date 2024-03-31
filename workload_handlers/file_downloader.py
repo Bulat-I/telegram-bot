@@ -12,7 +12,7 @@ async def fileDownloader(message) -> str:
     file_name_telegram = message.document.file_name
     file_telegram = await bot.get_file(file_id_telegram)
     file_path_telegram = file_telegram.file_path
-    file_local_path = file_input_location + file_id_telegram + '_' + file_name_telegram
+    file_local_path = os.path.join(file_input_location, file_id_telegram + '_' + file_name_telegram)
     
     file_local = await bot.download_file(file_path_telegram, file_local_path)
     
