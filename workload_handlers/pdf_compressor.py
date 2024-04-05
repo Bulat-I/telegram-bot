@@ -1,13 +1,14 @@
 import os
 from pypdf import PdfReader, PdfWriter
 
+
 async def compressPDF(input_item, output_path):
     reader = PdfReader(input_item)
     writer = PdfWriter()
 
     for page in reader.pages:
         writer.add_page(page)
-    
+
     writer.add_metadata(reader.metadata)
 
     for page in writer.pages:
