@@ -5,21 +5,26 @@ from aiogram.filters import CommandStart
 from aiogram.fsm.strategy import FSMStrategy
 
 from dotenv import find_dotenv, load_dotenv
+
 load_dotenv(find_dotenv())
 
 from handlers.user_handlers import user_handlers_router
 from handlers.admin_handlers import admin_handlers_router
 from common.bot_commands import menu_items
 
-ALLOWED_UPDATES=['message, edited_message']
+ALLOWED_UPDATES = ["message, edited_message, inline_query"]
 
-bot = Bot(token=os.getenv('TOKEN'))
-dp = Dispatcher(fsm_strategy = FSMStrategy.USER_IN_CHAT)
+bot = Bot(token=os.getenv("TOKEN"))
+dp = Dispatcher(fsm_strategy=FSMStrategy.USER_IN_CHAT)
 dp.include_routers(user_handlers_router, admin_handlers_router)
+
 
 async def main():
     await bot.delete_webhook(drop_pending_updates=True)
-    await bot.set_my_commands(commands=menu_items, scope=types.BotCommandScopeAllPrivateChats())
+    await bot.set_my_commands(
+        commands=menu_items, scope=types.BotCommandScopeAllPrivateChats()
+    )
     await dp.start_polling(bot, allowed_updates=ALLOWED_UPDATES)
+
 
 asyncio.run(main())

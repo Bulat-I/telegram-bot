@@ -6,10 +6,8 @@ load_dotenv(find_dotenv())
 bot = Bot(token=os.getenv('TOKEN'))
 file_input_location=os.getenv('FILE_INPUT_LOCATION')
 
-async def fileDownloader(message) -> str:
+async def fileDownloader(file_id_telegram, file_name_telegram) -> str:
     
-    file_id_telegram = message.document.file_id
-    file_name_telegram = message.document.file_name
     file_telegram = await bot.get_file(file_id_telegram)
     file_path_telegram = file_telegram.file_path
     file_local_path = os.path.join(file_input_location, file_id_telegram + '_' + file_name_telegram)
