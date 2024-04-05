@@ -26,12 +26,28 @@ user_handlers_router.message.filter(ChatTypeFilter(['private']))
 
 
 INITIAL_KEYBOARD = build_inline_callback_keyboard(
-            buttons={
+    buttons={
                 "Convert to PDF":f"topdf",
                 "Compress PDF file":f"compress",
                 "Rotate PDF":f"rotate",
                 "Merge two PDFs":f"merge"
             }
+)
+
+
+FILE_FIRST_KEYBOARD_PDF_FILE = build_inline_callback_keyboard(
+    buttons={
+                "Compress PDF file":f"compress_file_first",
+                "Rotate PDF":f"rotate_file_first",
+                "Merge two PDFs":f"merge_file_first"
+    }
+)
+
+
+FILE_FIRST_KEYBOARD_NON_PDF_FILE = build_inline_callback_keyboard(
+    buttons={
+                "Convert to PDF":f"topdf_file_first",
+    }
 )
 
 
@@ -85,6 +101,15 @@ class MergePDF(StatesGroup):
         "MergePDF:input2": "Upload your second file"
     }
 
+
+class MergePDFFileFirst(StatesGroup):
+    input_file2 = State()
+
+    texts = {
+        "MergePDFFileFirst:input2": "Upload your second file"
+    }
+
+
 @user_handlers_router.message(CommandStart())
 async def start_cmd(message: types.Message) -> None:
     await message.answer(
@@ -93,6 +118,177 @@ async def start_cmd(message: types.Message) -> None:
     )
 
 
+#This is a handler for incoming document without a command
+@user_handlers_router.message(StateFilter(None), F.document)
+async def document_without_command(message: types.Message, state: FSMContext):
+    original_file_name = message.document.file_name
+    file_id_telegram = message.document.file_id
+    file_name_output_temp = os.path.splitext(original_file_name)
+    temp_file_name_with_id = file_id_telegram + "_" + file_name_output_temp[0] + ".pdf"
+
+    if (message.document.file_size / (1024 * 1024) >= 20):
+        await message.answer("Your file exceeds 20 MB \n Please try a smaller file")
+        return
+
+    file_path_input = await fileDownloader(file_id_telegram, original_file_name)
+            
+    if not (os.path.exists(file_path_input)):
+        await message.answer("Something went wrong \n Please try again", reply_markup=INITIAL_KEYBOARD)
+        return
+    
+    await state.update_data(file_path_input=file_path_input)
+    await state.update_data(file_id_telegram=file_id_telegram)
+    await state.update_data(original_file_name=original_file_name)
+
+    if (file_name_output_temp[1] != ".pdf"):
+        if (file_name_output_temp[1] not in SUPPORTED_FILES_LIST):
+            await message.answer("Your file is in an unsupported format \n Please try another file", reply_markup=INITIAL_KEYBOARD)
+            os.remove(file_path_input)
+            return
+        else:
+            await message.answer("Please select what you want to do with this file", reply_markup=FILE_FIRST_KEYBOARD_NON_PDF_FILE)
+            return
+
+    if (file_name_output_temp[1] == ".pdf"):
+        await message.answer("Please select what you want to do with this file", reply_markup=FILE_FIRST_KEYBOARD_PDF_FILE)
+        return
+
+
+@user_handlers_router.callback_query(StateFilter(None), F.data.contains("topdf_file_first"))
+async def topdf_file_first(callback: types.CallbackQuery, state: FSMContext):
+    
+    data = await state.get_data()
+    
+    file_path_input = data["file_path_input"]
+    file_id_telegram = data["file_id_telegram"]
+    original_file_name = data["original_file_name"]
+
+    file_name_output_temp = os.path.splitext(original_file_name)
+    file_name_output_original_pdf = file_name_output_temp[0] + ".pdf"
+    temp_file_name_with_id = file_id_telegram + "_" + file_name_output_temp[0] + ".pdf"
+    
+    await callback.message.answer("Please wait")
+    
+    file_path_output = os.path.join(file_output_location, temp_file_name_with_id)
+    
+    converter_exit_code = await convertToPDF(file_path_input, file_output_location)
+    
+    if converter_exit_code != 0:
+        await state.clear()
+        await callback.message.answer("Something went wrong \n Please try again", reply_markup=INITIAL_KEYBOARD)
+        return
+    
+    if os.path.exists(file_path_output):
+        await callback.message.reply_document(types.FSInputFile(file_path_output, 'converted_' + file_name_output_original_pdf))
+        await callback.message.answer("Here is your PDF", reply_markup=INITIAL_KEYBOARD)
+    else:
+        await state.clear()
+        await callback.message.answer("Something went wrong \n Please try again", reply_markup=INITIAL_KEYBOARD)
+        return
+    
+    if os.path.isfile(file_path_output):
+        os.remove(file_path_output)
+    
+    await state.clear()
+
+
+@user_handlers_router.callback_query(StateFilter(None), F.data.contains("compress_file_first"))
+async def compress_file_first(callback: types.CallbackQuery, state: FSMContext):
+    
+    data = await state.get_data()
+    
+    file_path_input = data["file_path_input"]
+    file_id_telegram = data["file_id_telegram"]
+    original_file_name = data["original_file_name"]
+
+    file_name_output_temp = os.path.splitext(original_file_name)
+    file_name_output_original_pdf = file_name_output_temp[0] + ".pdf"
+    temp_file_name_with_id = file_id_telegram + "_" + file_name_output_temp[0] + ".pdf"
+    
+    await callback.message.answer("Please wait")
+    
+    file_path_output = os.path.join(file_output_location, temp_file_name_with_id)
+    
+    compressor_result = await compressPDF(file_path_input, file_output_location)
+    
+    if os.path.exists(file_path_output):
+        await callback.message.reply_document(types.FSInputFile(file_path_output, 'compressed_' + file_name_output_original_pdf))
+        await callback.message.answer("Here is your PDF", reply_markup=INITIAL_KEYBOARD)
+    else:
+        await state.clear()
+        await callback.message.answer("Something went wrong \n Please try again", reply_markup=INITIAL_KEYBOARD)
+        return
+    
+    if os.path.isfile(file_path_output):
+        os.remove(file_path_output)
+    
+    await state.clear()
+
+
+@user_handlers_router.callback_query(StateFilter(None), F.data.contains("rotate_file_first"))
+async def rotate_file_first(callback: types.CallbackQuery, state: FSMContext):
+
+    await callback.message.answer("Select how you want to rotate your PDF", reply_markup=ROTATE_KEYBOARD)
+    await state.set_state(Rotate.selectOption)
+
+
+@user_handlers_router.callback_query(StateFilter(None), F.data.contains("merge_file_first"))
+async def merge_file_first_Input1(callback: types.CallbackQuery, state: FSMContext):
+
+    await callback.message.answer("Upload your second file")
+    await state.set_state(MergePDFFileFirst.input_file2)
+
+
+@user_handlers_router.message(StateFilter(MergePDFFileFirst.input_file2), F.document)
+async def merge_file_first_Input2(message: types.Message, state: FSMContext):
+    
+    data = await state.get_data()
+    
+    file_path_input1 = data["file_path_input"]
+    original_file_name1 = data["original_file_name"]
+
+    original_file_name2 = message.document.file_name
+    file_id_telegram2 = message.document.file_id
+    file_name_output_temp2 = os.path.splitext(original_file_name2)
+
+    if (file_name_output_temp2[1] != ".pdf"):
+        await message.answer("Your file must be in PDF format \n Please try another file")
+        await state.set_state(MergePDFFileFirst.input_file2)
+        return
+
+    await message.answer("Please wait")
+    
+    if (message.document.file_size / (1024 * 1024) >= 20):
+        await message.answer("Your file exceeds 20 MB \n Please try a smaller file")
+        await state.set_state(MergePDFFileFirst.input_file2)
+        return
+    
+    file_path_input2 = await fileDownloader(file_id_telegram2, original_file_name2)
+
+    if not (os.path.exists(file_path_input2)):
+        await state.clear()
+        await message.answer("Something went wrong \n Please try again", reply_markup=INITIAL_KEYBOARD)
+        return
+    
+    file_path_output = os.path.join(file_output_location, os.path.basename(file_path_input1))
+    
+    merger_exit_code = await mergeTwoPDF(file_path_input1, file_path_input2, file_output_location)
+    
+    if (os.path.exists(file_path_output)):
+        await message.reply_document(types.FSInputFile(file_path_output, 'merged_' + original_file_name1))
+        await message.answer("Here is your PDF", reply_markup=INITIAL_KEYBOARD)
+    else:
+        await state.clear()
+        await message.answer("Something went wrong \n Please try again", reply_markup=INITIAL_KEYBOARD)
+        return
+
+    if os.path.isfile(file_path_output):
+        os.remove(file_path_output)
+
+    await state.clear()
+
+
+#This is a ToPDF command handler
 @user_handlers_router.message(StateFilter(None), Command("topdf"))
 @user_handlers_router.callback_query(F.data.contains("topdf"))
 async def convert_to_pdf_callback(callback: types.CallbackQuery, state: FSMContext):
@@ -234,11 +430,6 @@ async def compresspdf_Input(message: types.Message, state: FSMContext):
     file_path_output = os.path.join(file_output_location, os.path.basename(file_path_input))
     
     compressor_result = await compressPDF(file_path_input, file_output_location)
-
-    #if compressor_exit_code != 0:
-    #    await state.clear()
-    #    await message.answer("Something went wrong \n Please try again", reply_markup=INITIAL_KEYBOARD)
-    #    return
     
     if (os.path.exists(file_path_output)):
         await message.reply_document(types.FSInputFile(file_path_output, 'compressed_' + original_file_name))
