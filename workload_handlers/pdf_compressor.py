@@ -1,5 +1,4 @@
 import os
-#import subprocess
 from pypdf import PdfReader, PdfWriter
 
 async def compressPDF(input_item, output_path):
