@@ -3,6 +3,7 @@ import subprocess
 
 from pypdf import PdfMerger
 
+
 async def mergeTwoPDF(input_item1, input_item2, output_path):
     merger = PdfMerger()
 

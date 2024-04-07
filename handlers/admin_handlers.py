@@ -7,18 +7,17 @@ from keyboards.inline_keyboard import build_inline_callback_keyboard
 
 
 admin_handlers_router = Router()
-admin_handlers_router.message.filter(ChatTypeFilter(['private']), IsAdmin())
+admin_handlers_router.message.filter(ChatTypeFilter(["private"]), IsAdmin())
+
 
 @admin_handlers_router.message(Command("admin"))
 async def admin_features(message: types.Message):
     await message.answer(
         "Hey BOSS",
-        reply_markup=build_inline_callback_keyboard(
-            buttons={
-                "I am the boss":f"boss"
-            }
-        ))
-    
+        reply_markup=build_inline_callback_keyboard(buttons={"I am the boss": f"boss"}),
+    )
+
+
 @admin_handlers_router.callback_query(F.data.contains("compress"))
 async def boss_callback(callback: types.CallbackQuery):
 

@@ -3,6 +3,7 @@ import subprocess
 
 from pypdf import PdfReader, PdfWriter
 
+
 async def rotatePDF(input_item, output_path, rotateAngle):
     reader = PdfReader(input_item)
 
