@@ -1,6 +1,4 @@
-#######
-v_PDF (translated as to_PDF)
-#######
+# v_PDF (translated as to_PDF)
 
 Features
 ========
