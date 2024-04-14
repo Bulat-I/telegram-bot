@@ -1,0 +1,159 @@
+# Translations template for PROJECT.
+# Copyright (C) 2024 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2024-04-08 05:16+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.13.1\n"
+
+#: handlers/user_handlers.py:32 handlers/user_handlers.py:51
+#: handlers/user_handlers.py:471
+msgid "Convert to PDF"
+msgstr ""
+
+#: handlers/user_handlers.py:33 handlers/user_handlers.py:42
+msgid "Compress PDF file"
+msgstr ""
+
+#: handlers/user_handlers.py:34 handlers/user_handlers.py:43
+msgid "Rotate PDF"
+msgstr ""
+
+#: handlers/user_handlers.py:35 handlers/user_handlers.py:44
+msgid "Merge two PDFs"
+msgstr ""
+
+#: handlers/user_handlers.py:58
+msgid "Rotate left - 90°"
+msgstr ""
+
+#: handlers/user_handlers.py:59
+msgid "Rotate right - 90°"
+msgstr ""
+
+#: handlers/user_handlers.py:60
+msgid "Rotate - 180°"
+msgstr ""
+
+#: handlers/user_handlers.py:153
+msgid "Hi, I am your PDF converter assistant"
+msgstr ""
+
+#: handlers/user_handlers.py:194 handlers/user_handlers.py:413
+#: handlers/user_handlers.py:550 handlers/user_handlers.py:644
+#: handlers/user_handlers.py:729 handlers/user_handlers.py:959
+#: handlers/user_handlers.py:1017
+msgid ""
+"Your file exceeds 20 MB \n"
+" Please try a smaller file"
+msgstr ""
+
+#: handlers/user_handlers.py:208 handlers/user_handlers.py:272
+#: handlers/user_handlers.py:295 handlers/user_handlers.py:350
+#: handlers/user_handlers.py:423 handlers/user_handlers.py:453
+#: handlers/user_handlers.py:567 handlers/user_handlers.py:580
+#: handlers/user_handlers.py:603 handlers/user_handlers.py:660
+#: handlers/user_handlers.py:688 handlers/user_handlers.py:745
+#: handlers/user_handlers.py:811 handlers/user_handlers.py:865
+#: handlers/user_handlers.py:919 handlers/user_handlers.py:934
+#: handlers/user_handlers.py:970 handlers/user_handlers.py:1028
+#: handlers/user_handlers.py:1058
+msgid ""
+"Something went wrong \n"
+" Please try again"
+msgstr ""
+
+#: handlers/user_handlers.py:221 handlers/user_handlers.py:535
+msgid ""
+"Your file is in an unsupported format \n"
+" Please try another file"
+msgstr ""
+
+#: handlers/user_handlers.py:230 handlers/user_handlers.py:238
+msgid "Please select what you want to do with this file"
+msgstr ""
+
+#: handlers/user_handlers.py:262 handlers/user_handlers.py:324
+#: handlers/user_handlers.py:554 handlers/user_handlers.py:640
+#: handlers/user_handlers.py:725 handlers/user_handlers.py:1013
+msgid "Please wait"
+msgstr ""
+
+#: handlers/user_handlers.py:285 handlers/user_handlers.py:340
+#: handlers/user_handlers.py:443 handlers/user_handlers.py:593
+#: handlers/user_handlers.py:678 handlers/user_handlers.py:1048
+msgid "Here is your PDF"
+msgstr ""
+
+#: handlers/user_handlers.py:370 handlers/user_handlers.py:753
+msgid "Select how you want to rotate your PDF"
+msgstr ""
+
+#: handlers/user_handlers.py:385 handlers/user_handlers.py:976
+msgid "Upload your second file"
+msgstr ""
+
+#: handlers/user_handlers.py:404 handlers/user_handlers.py:635
+#: handlers/user_handlers.py:720 handlers/user_handlers.py:763
+#: handlers/user_handlers.py:783 handlers/user_handlers.py:837
+#: handlers/user_handlers.py:891 handlers/user_handlers.py:952
+#: handlers/user_handlers.py:985 handlers/user_handlers.py:1008
+msgid ""
+"Your response is not a PDF document\n"
+"Please upload a PDF document"
+msgstr ""
+
+#: handlers/user_handlers.py:472 handlers/user_handlers.py:483
+#: handlers/user_handlers.py:492
+msgid "Upload your file"
+msgstr ""
+
+#: handlers/user_handlers.py:482
+msgid "Compress PDF"
+msgstr ""
+
+#: handlers/user_handlers.py:491
+msgid "Rotate your PDF"
+msgstr ""
+
+#: handlers/user_handlers.py:500
+msgid "Merge your PDFs"
+msgstr ""
+
+#: handlers/user_handlers.py:501
+msgid "Upload your first file"
+msgstr ""
+
+#: handlers/user_handlers.py:517
+msgid "Your actions were cancelled. Let's start it over"
+msgstr ""
+
+#: handlers/user_handlers.py:543
+msgid ""
+"Your file is already in PDF format \n"
+" Please try another file"
+msgstr ""
+
+#: handlers/user_handlers.py:618 handlers/user_handlers.py:705
+msgid ""
+"Your response is not a document \n"
+" Please upload a document"
+msgstr ""
+
+#: handlers/user_handlers.py:1074
+msgid ""
+"Your response is not a PDF document \n"
+" Please upload a PDF document"
+msgstr ""
+

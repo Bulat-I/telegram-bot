@@ -2,7 +2,7 @@ import os
 from pypdf import PdfReader, PdfWriter
 
 
-async def compressPDF(input_item, output_path):
+async def compressPDF(input_item, output_path) -> str:
     reader = PdfReader(input_item)
     writer = PdfWriter()
 

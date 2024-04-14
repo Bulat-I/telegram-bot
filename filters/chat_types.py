@@ -15,4 +15,7 @@ class IsAdmin(Filter):
         pass
 
     async def __call__(self, message: types.message, bot: Bot) -> bool:
-        return message.from_user.id in bot.my_admins_list
+        if bot.my_admins_list is not None:
+            return message.from_user.id in bot.my_admins_list
+        else:
+            return False

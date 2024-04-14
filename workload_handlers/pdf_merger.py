@@ -4,7 +4,7 @@ import subprocess
 from pypdf import PdfMerger
 
 
-async def mergeTwoPDF(input_item1, input_item2, output_path):
+async def mergeTwoPDF(input_item1, input_item2, output_path) -> str:
     merger = PdfMerger()
 
     input_filename = os.path.basename(input_item1)
