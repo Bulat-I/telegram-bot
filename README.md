@@ -12,7 +12,7 @@ Files can be loaded before selecting a command or pre-selecting an operation usi
 
 The bot is available in English and Russian. Languages ​​can be changed using the Menu button in the lower left corner.
 
-Unser the hood
+Under the hood
 ========
 **v_PDF** is written on Python and utilizes the following:\n
 * Aiogram 3 library as a base
