@@ -6,3 +6,4 @@ handlers/__pycache__/*
 keyboards/__pycache__/*
 workload_handlers/__pycache__/*
 __pycache__/*
+build.log

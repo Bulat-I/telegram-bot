@@ -3,6 +3,7 @@ import logging
 import os
 from aiogram import Bot, Dispatcher, types
 from aiogram.fsm.strategy import FSMStrategy
+from pathlib import Path
 
 from aiogram_i18n import I18nMiddleware
 from aiogram_i18n.cores.gnu_text_core import GNUTextCore
@@ -16,7 +17,7 @@ from common.bot_commands import menu_items
 from middlewares import i18nmiddleware
 
 ALLOWED_UPDATES = ["message, inline_query"]
-I18N_BASE_DIR = os.path.join("/home/sshuser/projects/telegram-bot", "locales")
+I18N_BASE_DIR = os.path.join(Path.cwd(), "locales")
 log_file_path = os.getenv("LOGFILEPATH")
     
 logging.getLogger().setLevel(level=os.getenv("LOGLEVEL"))
