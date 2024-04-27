@@ -15,7 +15,7 @@ async def convertToPDF(input_item, output_path) -> int:
     c = pycurl.Curl()
     c.setopt(c.URL, CONVERTER_URL)
     c.setopt(c.WRITEDATA, response_buffer)
-    c.setopt(c.HTTPPOST, [('filename', input_filename)])
+    c.setopt(c.HTTPPOST, [('filename', input_filename.encode('UTF-8'))])
     c.perform()
     http_status_code = c.getinfo(pycurl.HTTP_CODE)
     c.close()

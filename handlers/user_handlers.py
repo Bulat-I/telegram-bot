@@ -147,7 +147,7 @@ class DocumentWithoutCommand(StatesGroup):
 
     texts = {"DocumentWithoutCommand:selectOption": "Select desired option"}
 
-
+@user_handlers_router.message(or_f(Command("start"), (F.text.lower() == "start")))
 @user_handlers_router.message(CommandStart())
 async def start_cmd(message: types.Message, i18n: I18nContext) -> None:
     await message.bot.delete_my_commands(scope=types.BotCommandScopeChat(chat_id=message.chat.id))
