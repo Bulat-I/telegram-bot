@@ -1,5 +1,16 @@
+import os
 from aiogram.filters import Filter
 from aiogram import Bot, types
+from dotenv import find_dotenv, load_dotenv
+
+load_dotenv(find_dotenv())
+
+admins_list_temp = os.getenv("ADMINS_LIST")
+
+if admins_list_temp is not None:
+    if admins_list_temp != "":
+        admins_list = admins_list_temp.split(',')
+        admins_list = list(map(int, admins_list))
 
 
 class ChatTypeFilter(Filter):
@@ -14,8 +25,8 @@ class IsAdmin(Filter):
     def __init__(self) -> None:
         pass
 
-    async def __call__(self, message: types.message, bot: Bot) -> bool:
-        if bot.my_admins_list is not None:
-            return message.from_user.id in bot.my_admins_list
+    async def __call__(self, message: types.message) -> bool:
+        if admins_list is not None:
+            return (message.from_user.id in admins_list)
         else:
             return False

@@ -12,6 +12,7 @@ from workload_handlers.pdf_compressor import compressPDF
 from workload_handlers.pdf_converter import convertToPDF
 from workload_handlers.file_downloader import fileDownloader
 from workload_handlers.pdf_merger import mergeTwoPDF
+from common.bot_commands import menu_items
 
 from dotenv import find_dotenv, load_dotenv
 from workload_handlers.pdf_rotator import rotatePDF
@@ -149,6 +150,10 @@ class DocumentWithoutCommand(StatesGroup):
 
 @user_handlers_router.message(CommandStart())
 async def start_cmd(message: types.Message, i18n: I18nContext) -> None:
+    await message.bot.delete_my_commands(scope=types.BotCommandScopeChat(chat_id=message.chat.id))
+    await message.bot.set_my_commands(
+        commands=menu_items, scope=types.BotCommandScopeChat(chat_id=message.chat.id)
+    )
     await message.answer(
         i18n.get("Hi, I am your PDF converter assistant"), reply_markup=INITIAL_KEYBOARD
     )
