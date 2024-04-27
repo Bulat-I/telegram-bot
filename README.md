@@ -2,7 +2,7 @@
 
 Features
 ========
-**v_PDF** is a Telegram bot for managing your PDF documents:\n
+**v_PDF** is a Telegram bot for managing your PDF documents: \n
 * Convert multiple file types to PDF (images, MS Office and LibreOffice documents and others)
 * Compress PDF files to reduce their size
 * Rotate PDFs
@@ -14,7 +14,7 @@ The bot is available in English and Russian. Languages ​​can be changed usin
 
 Under the hood
 ========
-**v_PDF** is written on Python and utilizes the following:\n
+**v_PDF** is written on Python and utilizes the following: \n
 * Aiogram 3 library as a base
 * Aiogram_i18n library for processing localizations
 * GNU GetText library as a localization core
